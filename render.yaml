@@ -11,10 +11,8 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: EMAIL_USER
-        sync: false
         value: skan.egypt@gmail.com
       - key: EMAIL_PASS
-        sync: false
         value: iqza zlwz phom knsq
       - key: BASE_URL
         value: https://skan-xi.vercel.app
