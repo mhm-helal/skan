@@ -16,6 +16,10 @@ class UserLogin(BaseModel):
     phone: Optional[str] = None
     password: str
 
+    def model_post_init(self, __context):
+        if not self.email and not self.phone:
+            raise ValueError("يجب إدخال البريد الإلكتروني أو رقم الهاتف")
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"

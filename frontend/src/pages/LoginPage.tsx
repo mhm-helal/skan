@@ -137,7 +137,7 @@ export default function LoginPage() {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
                       className="w-full pr-10 pl-4 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 placeholder-purple-300/30 focus:outline-none focus:border-purple-500/30 transition-colors"
-                      placeholder="10 910 20130"
+                      placeholder="••• ••• •••"
                       required
                     />
                   </div>
