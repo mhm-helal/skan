@@ -34,8 +34,8 @@ def register(data: UserRegister, db: Session = Depends(get_db)):
 
     try:
         send_welcome_email_sync(user.email, user.name)
-    except Exception as e:
-        print(f"[EMAIL ERROR] {e}")
+    except Exception:
+        pass
 
     return user
 

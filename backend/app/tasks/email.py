@@ -145,7 +145,6 @@ def _send_email_sync(to_email: str, subject: str, html_body: str):
         server.starttls()
         server.login(settings.EMAIL_USER, settings.EMAIL_PASS)
         server.sendmail(settings.EMAIL_USER, to_email, msg.as_string())
-    print(f"[EMAIL] Sent to {to_email}: {subject}")
     return True
 
 
