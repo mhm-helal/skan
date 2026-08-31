@@ -8,7 +8,7 @@ export default async function PropertyPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const property = getPropertyById(Number(id));
+  const property = await getPropertyById(Number(id));
   if (!property) return notFound();
 
   return <PropertyDetailClient property={property} />;

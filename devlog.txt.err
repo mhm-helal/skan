@@ -7340,3 +7340,376 @@ https://react.dev/link/hydration-mismatch
  
 [browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
 [browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+⨯ TypeError: {imported module ./src/lib/db.ts}.default.prepare is not a function
+    at getAllProperties (src\lib\properties.ts:33:19)
+    at Home (src\app\page.tsx:5:38)
+  31 |
+  32 | export function getAllProperties(): Property[] {
+> 33 |   const rows = db.prepare("SELECT * FROM properties ORDER BY id DESC").all() as Record<string, unknown>[];
+     |                   ^
+  34 |   return rows.map((r) => ({
+  35 |     id: r.id as number,
+  36 |     title: r.title as string, {
+  digest: '1432980647'
+}
+⨯ TypeError: {imported module ./src/lib/db.ts}.default.prepare is not a function
+    at getAllProperties (src\lib\properties.ts:33:19)
+    at Home (src\app\page.tsx:5:38)
+  31 |
+  32 | export function getAllProperties(): Property[] {
+> 33 |   const rows = db.prepare("SELECT * FROM properties ORDER BY id DESC").all() as Record<string, unknown>[];
+     |                   ^
+  34 |   return rows.map((r) => ({
+  35 |     id: r.id as number,
+  36 |     title: r.title as string, {
+  digest: '1432980647'
+}
+⨯ TypeError: properties.map is not a function
+    at HomeContent (src\components\HomeContent.tsx:109:25)
+  107 |
+  108 |           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+> 109 |             {properties.map((p) => (
+      |                         ^
+  110 |               <PropertyCard key={p.id} property={p} />
+  111 |             ))}
+  112 |           </div> {
+  digest: '2423640875'
+}
+⨯ TypeError: properties.map is not a function
+    at HomeContent (src\components\HomeContent.tsx:109:25)
+  107 |
+  108 |           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+> 109 |             {properties.map((p) => (
+      |                         ^
+  110 |               <PropertyCard key={p.id} property={p} />
+  111 |             ))}
+  112 |           </div> {
+  digest: '2423640875'
+}
+⨯ TypeError: properties.map is not a function
+    at HomeContent (src\components\HomeContent.tsx:109:25)
+  107 |
+  108 |           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+> 109 |             {properties.map((p) => (
+      |                         ^
+  110 |               <PropertyCard key={p.id} property={p} />
+  111 |             ))}
+  112 |           </div> {
+  digest: '2423640875'
+}
+⨯ TypeError: properties.map is not a function
+    at HomeContent (src\components\HomeContent.tsx:109:25)
+  107 |
+  108 |           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+> 109 |             {properties.map((p) => (
+      |                         ^
+  110 |               <PropertyCard key={p.id} property={p} />
+  111 |             ))}
+  112 |           </div> {
+  digest: '2423640875'
+}
+⨯ TypeError: properties.map is not a function
+    at HomeContent (src\components\HomeContent.tsx:109:25)
+  107 |
+  108 |           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+> 109 |             {properties.map((p) => (
+      |                         ^
+  110 |               <PropertyCard key={p.id} property={p} />
+  111 |             ))}
+  112 |           </div> {
+  digest: '2423640875'
+}
+⨯ TypeError: properties.map is not a function
+    at HomeContent (src\components\HomeContent.tsx:109:25)
+  107 |
+  108 |           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+> 109 |             {properties.map((p) => (
+      |                         ^
+  110 |               <PropertyCard key={p.id} property={p} />
+  111 |             ))}
+  112 |           </div> {
+  digest: '2423640875'
+}
+⨯ TypeError: properties.map is not a function
+    at HomeContent (src\components\HomeContent.tsx:109:25)
+  107 |
+  108 |           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+> 109 |             {properties.map((p) => (
+      |                         ^
+  110 |               <PropertyCard key={p.id} property={p} />
+  111 |             ))}
+  112 |           </div> {
+  digest: '2423640875'
+}
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RootLayout>
+      <html lang="ar" dir="rtl" className="cairo_25e2...">
+        ...
+          <LoadingScreen onComplete={function onComplete}>
+            <AnimatePresence>
+              <PresenceChild isPresent={true} initial={undefined} custom={undefined} presenceAffectsLayout={true} ...>
+                <PopChild pop={false} isPresent={true} anchorX="left" anchorY="top" root={undefined}>
+                  <PopChildMeasure isPresent={true} childRef={{current:null}} sizeRef={{...}} pop={false}>
+                    <motion.div initial={{opacity:1}} exit={{opacity:0, ...}} transition={{duration:0.5, ...}} ...>
+                      <div className="fixed inse..." style={{opacity:1}} ref={function useMotionRef.useCallback}>
+                        <div>
+                        <motion.div>
+                        <motion.h1>
+                        <div>
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(-125.66209809980164px) translateY(-150.85713708462035px)"
+-                             transform: "translateX(-104.086px) translateY(-158.161px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(21.90385535128354px) translateY(80.39601121650395px)"
+-                             transform: "translateX(-79.4936px) translateY(-50.3182px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(158.55730428834852px) translateY(-2.4914836574111234px)"
+-                             transform: "translateX(-68.5075px) translateY(75.0532px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(144.19757870341743px) translateY(-148.78881251796133px)"
+-                             transform: "translateX(-179.17px) translateY(47.2995px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(-33.60060255735161px) translateY(158.02498601684px)"
+-                             transform: "translateX(-57.2159px) translateY(96.1153px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(35.165652603193365px) translateY(118.14775786148704px)"
+-                             transform: "translateX(123.545px) translateY(196.17px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+ 
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[browser] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <RootLayout>
+      <html lang="ar" dir="rtl" className="cairo_25e2...">
+        ...
+          <LoadingScreen onComplete={function onComplete}>
+            <AnimatePresence>
+              <PresenceChild isPresent={true} initial={undefined} custom={undefined} presenceAffectsLayout={true} ...>
+                <PopChild pop={false} isPresent={true} anchorX="left" anchorY="top" root={undefined}>
+                  <PopChildMeasure isPresent={true} childRef={{current:null}} sizeRef={{...}} pop={false}>
+                    <motion.div initial={{opacity:1}} exit={{opacity:0, ...}} transition={{duration:0.5, ...}} ...>
+                      <div className="fixed inse..." style={{opacity:1}} ref={function useMotionRef.useCallback}>
+                        <div>
+                        <motion.div>
+                        <motion.h1>
+                        <div>
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(152.1608851450152px) translateY(113.22108480429335px)"
+-                             transform: "translateX(-142.569px) translateY(-114.002px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(170.4892303492088px) translateY(6.631558921320618px)"
+-                             transform: "translateX(165.091px) translateY(-74.1638px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(-99.82278984109163px) translateY(-151.53300139439762px)"
+-                             transform: "translateX(115.02px) translateY(175.544px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(-144.01329505177202px) translateY(191.3223605878281px)"
+-                             transform: "translateX(-38.4868px) translateY(187.486px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(-179.2040304037805px) translateY(-53.14920478942469px)"
+-                             transform: "translateX(75.0622px) translateY(12.4101px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+                        <motion.div className="absolute h..." initial={{...}} animate={{y:[...], ...}} transition={{...}}>
+                          <div
+                            className="absolute h-1 w-1 rounded-full bg-fuchsia-400/40"
+                            style={{
++                             opacity: 0
+-                             opacity: "0"
++                             transform: "translateX(35.639068970138965px) translateY(104.72884931356276px)"
+-                             transform: "translateX(111.954px) translateY(104.402px)"
+                            }}
+                            ref={function useMotionRef.useCallback}
+                          >
+ 
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[browser] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.

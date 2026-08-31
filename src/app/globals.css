@@ -5,11 +5,17 @@
 :root {
   --background: #0a0514;
   --foreground: #e2e8f0;
+  --card: #ffffff08;
+  --card-hover: #ffffff10;
+  --border: #ffffff0d;
 }
 
 .dark {
-  --background: #0e0720;
+  --background: #0f0a24;
   --foreground: #f5f3ff;
+  --card: #ffffff0a;
+  --card-hover: #ffffff15;
+  --border: #ffffff15;
 }
 
 @theme inline {

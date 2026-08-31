@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import db from "./db";
+import { getDB } from "./db";
 
-export function getAdminUser(req: Request) {
+export async function getAdminUser(req: Request) {
   const token = req.headers
     .get("cookie")
     ?.split("token=")[1]
@@ -15,10 +15,9 @@ export function getAdminUser(req: Request) {
       name: string;
     };
 
-    // Check if user is admin
-    const admin = db.prepare("SELECT role FROM admins WHERE user_id = ?").get(decoded.id) as
-      | { role: string }
-      | undefined;
+    const db = await getDB();
+    const result = await db.execute({ sql: "SELECT role FROM admins WHERE user_id = ?", args: [decoded.id] });
+    const admin = result.rows[0] as unknown as { role: string } | undefined;
 
     if (!admin) return null;
 
@@ -28,9 +27,9 @@ export function getAdminUser(req: Request) {
   }
 }
 
-export function isMainAdmin(userId: number) {
-  const admin = db.prepare("SELECT role FROM admins WHERE user_id = ?").get(userId) as
-    | { role: string }
-    | undefined;
+export async function isMainAdmin(userId: number) {
+  const db = await getDB();
+  const result = await db.execute({ sql: "SELECT role FROM admins WHERE user_id = ?", args: [userId] });
+  const admin = result.rows[0] as unknown as { role: string } | undefined;
   return admin?.role === "main";
 }

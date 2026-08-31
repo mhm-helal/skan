@@ -1,0 +1,108 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: skan-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: skan
+      MYSQL_USER: skan
+      MYSQL_PASSWORD: skan123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: skan-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: skan-backend
+    restart: always
+    environment:
+      - DATABASE_URL=mysql+pymysql://skan:skan123@mysql:3306/skan
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET=skan-super-secret-change-in-production
+      - EMAIL_USER=${EMAIL_USER:-}
+      - EMAIL_PASS=${EMAIL_PASS:-}
+      - FIREBASE_CREDENTIALS=/app/firebase.json
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - firebase_vol:/app/firebase
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: skan-celery
+    restart: always
+    environment:
+      - DATABASE_URL=mysql+pymysql://skan:skan123@mysql:3306/skan
+      - REDIS_URL=redis://redis:6379/0
+      - EMAIL_USER=${EMAIL_USER:-}
+      - EMAIL_PASS=${EMAIL_PASS:-}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - backend
+      - redis
+      - mysql
+    command: celery -A app.tasks.celery_app worker --loglevel=info --queues=email,default
+
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: skan-celery-beat
+    restart: always
+    environment:
+      - DATABASE_URL=mysql+pymysql://skan:skan123@mysql:3306/skan
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - backend
+      - redis
+      - mysql
+    command: celery -A app.tasks.celery_app beat --loglevel=info
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: skan-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+  redis_data:
+  firebase_vol:

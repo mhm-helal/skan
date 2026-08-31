@@ -1,7 +1,7 @@
 import HomeContent from "@/components/HomeContent";
 import { getAllProperties } from "@/lib/properties";
 
-export default function Home() {
-  const properties = getAllProperties();
+export default async function Home() {
+  const properties = await getAllProperties();
   return <HomeContent properties={properties} />;
 }
