@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Building2, Users, BookOpen, Plus, Edit3, Trash2,
-  X, Eye, CreditCard
+  X, Eye, CreditCard, MessageCircle
 } from 'lucide-react';
 import { useAuth } from '../store';
 import api from '../api';
 import type { Property, Booking, Admin, Payment } from '../types';
 
-type SidebarTab = 'stats' | 'properties' | 'admins' | 'bookings' | 'payments';
+type SidebarTab = 'stats' | 'properties' | 'admins' | 'bookings' | 'payments' | 'chat';
 
 export default function AdminPage() {
   const { user } = useAuth();
@@ -68,6 +68,7 @@ export default function AdminPage() {
     { id: 'admins' as SidebarTab, icon: Users, label: 'المسؤولون' },
     { id: 'bookings' as SidebarTab, icon: BookOpen, label: 'الحجوزات' },
     { id: 'payments' as SidebarTab, icon: CreditCard, label: 'المدفوعات' },
+    { id: 'chat' as SidebarTab, icon: MessageCircle, label: 'الدردشة' },
   ];
 
   return (
@@ -341,6 +342,32 @@ export default function AdminPage() {
                 {payments.length === 0 && (
                   <div className="text-center py-12 text-purple-300/40">لا توجد مدفوعات بعد</div>
                 )}
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'chat' && (
+            <motion.div
+              key="chat"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white/90">الدردشة</h2>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate('/admin/chat')}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-l from-purple-500 to-pink-500 text-white text-sm font-medium"
+                >
+                  <MessageCircle size={16} />
+                  فتح الدردشة
+                </motion.button>
+              </div>
+              <div className="p-8 rounded-2xl bg-purple-500/5 border border-purple-500/10 text-center">
+                <MessageCircle size={48} className="mx-auto mb-4 text-purple-500/20" />
+                <p className="text-purple-300/40">اضغط على "فتح الدردشة" لإدارة المحادثات مع المستخدمين</p>
               </div>
             </motion.div>
           )}

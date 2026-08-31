@@ -6,6 +6,7 @@ import DockNav from './components/DockNav';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import LoadingScreen from './components/LoadingScreen';
+import ChatWidget from './components/ChatWidget';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -14,6 +15,7 @@ const PropertyDetailPage = lazy(() => import('./pages/PropertyDetailPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const SetupPage = lazy(() => import('./pages/SetupPage'));
 const PaymentPage = lazy(() => import('./pages/PaymentPage'));
+const AdminChatPage = lazy(() => import('./pages/AdminChatPage'));
 
 function AppContent() {
   const [loading, setLoading] = useState(true);
@@ -38,12 +40,14 @@ function AppContent() {
             <Route path="/properties/:id" element={<PropertyDetailPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/admin/setup" element={<SetupPage />} />
+            <Route path="/admin/chat" element={<AdminChatPage />} />
             <Route path="/payment" element={<PaymentPage />} />
           </Routes>
         </Suspense>
       </main>
       <Footer />
       <DockNav />
+      <ChatWidget />
     </>
   );
 }

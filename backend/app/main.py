@@ -151,7 +151,7 @@ app.add_middleware(
 
 # ── Routers ───────────────────────────────────────────
 
-from app.routers import auth, properties, bookings, admin, payments, phone
+from app.routers import auth, properties, bookings, admin, payments, phone, chat
 
 app.include_router(auth.router)
 app.include_router(properties.router)
@@ -159,6 +159,7 @@ app.include_router(bookings.router)
 app.include_router(admin.router)
 app.include_router(payments.router)
 app.include_router(phone.router)
+app.include_router(chat.router)
 
 # ── Static Files (uploads) ─────────────────────────────
 from fastapi.staticfiles import StaticFiles

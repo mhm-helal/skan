@@ -59,3 +59,21 @@ export interface Payment {
   property_title?: string;
   created_at: string;
 }
+
+export interface ChatMessage {
+  id: number;
+  user_id: number;
+  sender_name: string;
+  message: string;
+  is_admin: boolean;
+  is_read: boolean;
+  created_at: string;
+}
+
+export interface ChatConversation {
+  user_id: number;
+  user_name: string;
+  last_message: string;
+  last_message_at: string;
+  unread_count: number;
+}

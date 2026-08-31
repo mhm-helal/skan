@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     BASE_URL: str = "http://localhost:5173"
     FIREBASE_CREDENTIALS: str = "firebase.json"
     BROKERAGE_FEE: int = 1000
+    TWILIO_ACCOUNT_SID: str = ""
+    TWILIO_AUTH_TOKEN: str = ""
+    TWILIO_PHONE_NUMBER: str = ""
 
     class Config:
         env_file = ".env"

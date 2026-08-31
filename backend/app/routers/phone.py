@@ -41,7 +41,7 @@ def _send_sms(phone: str, code: str) -> bool:
             client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
             client.messages.create(
                 body=f"كود التحقق من Skan: {code}\nصالح لمدة {CODE_EXPIRY_MINUTES} دقائق",
-                from_=settings.TWILIO_FROM_NUMBER,
+                from_=settings.TWILIO_PHONE_NUMBER,
                 to=phone,
             )
             print(f"[SMS] Sent to {phone}: {code}")

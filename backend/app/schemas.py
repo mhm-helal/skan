@@ -157,3 +157,28 @@ class DashboardStats(BaseModel):
     total_revenue: int
     pending_bookings: int
     confirmed_bookings: int
+
+
+# ── Chat ──────────────────────────────────────────────
+
+class ChatMessageCreate(BaseModel):
+    message: str
+
+class ChatMessageResponse(BaseModel):
+    id: int
+    user_id: int
+    sender_name: str
+    message: str
+    is_admin: bool
+    is_read: bool
+    created_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+class ChatConversation(BaseModel):
+    user_id: int
+    user_name: str
+    last_message: str
+    last_message_at: Optional[datetime] = None
+    unread_count: int
