@@ -4,10 +4,36 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, User, Phone, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../store';
 
+const ARAB_COUNTRY_CODES = [
+  { code: '+20', country: 'مصر', flag: '🇪🇬' },
+  { code: '+966', country: 'السعودية', flag: '🇸🇦' },
+  { code: '+971', country: 'الإمارات', flag: '🇦🇪' },
+  { code: '+965', country: 'الكويت', flag: '🇰🇼' },
+  { code: '+973', country: 'البحرين', flag: '🇧🇭' },
+  { code: '+974', country: 'قطر', flag: '🇶🇦' },
+  { code: '+968', country: 'عمان', flag: '🇴🇲' },
+  { code: '+962', country: 'الأردن', flag: '🇯🇴' },
+  { code: '+961', country: 'لبنان', flag: '🇱🇧' },
+  { code: '+964', country: 'العراق', flag: '🇮🇶' },
+  { code: '+963', country: 'سوريا', flag: '🇸🇾' },
+  { code: '+970', country: 'فلسطين', flag: '🇵🇸' },
+  { code: '+967', country: 'اليمن', flag: '🇾🇪' },
+  { code: '+249', country: 'السودان', flag: '🇸🇩' },
+  { code: '+218', country: 'ليبيا', flag: '🇱🇾' },
+  { code: '+216', country: 'تونس', flag: '🇹🇳' },
+  { code: '+213', country: 'الجزائر', flag: '🇩🇿' },
+  { code: '+212', country: 'المغرب', flag: '🇲🇦' },
+  { code: '+222', country: 'موريتانيا', flag: '🇲🇷' },
+  { code: '+252', country: 'الصومال', flag: '🇸🇴' },
+  { code: '+253', country: 'جيبوتي', flag: '🇩🇯' },
+  { code: '+269', country: 'جزر القمر', flag: '🇰🇲' },
+];
+
 export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phoneCode, setPhoneCode] = useState('+20');
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +45,8 @@ export default function RegisterPage() {
     setError('');
     setLoading(true);
     try {
-      await register(name, email, password, phone || undefined);
+      const fullPhone = phone ? `${phoneCode}${phone}` : undefined;
+      await register(name, email, password, fullPhone);
       navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.detail || err.response?.data?.message || 'حدث خطأ أثناء التسجيل');
@@ -85,15 +112,28 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-sm font-medium text-purple-300/60 mb-2">رقم الهاتف (اختياري)</label>
-              <div className="relative">
-                <Phone size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-300/30" />
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pr-10 pl-4 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 placeholder-purple-300/30 focus:outline-none focus:border-purple-500/30 transition-colors"
-                  placeholder="+966 50 123 4567"
-                />
+              <div className="flex gap-2">
+                <select
+                  value={phoneCode}
+                  onChange={(e) => setPhoneCode(e.target.value)}
+                  className="w-[140px] flex-shrink-0 px-3 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 focus:outline-none focus:border-purple-500/30 transition-colors text-sm"
+                >
+                  {ARAB_COUNTRY_CODES.map((c) => (
+                    <option key={c.code} value={c.code} className="bg-[#0a0514] text-white">
+                      {c.flag} {c.code}
+                    </option>
+                  ))}
+                </select>
+                <div className="relative flex-1">
+                  <Phone size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-300/30" />
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                    className="w-full pr-10 pl-4 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 placeholder-purple-300/30 focus:outline-none focus:border-purple-500/30 transition-colors"
+                    placeholder="10 910 20130"
+                  />
+                </div>
               </div>
             </div>
 

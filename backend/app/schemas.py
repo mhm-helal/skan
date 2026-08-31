@@ -12,7 +12,8 @@ class UserRegister(BaseModel):
     phone: Optional[str] = None
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    email: Optional[str] = None
+    phone: Optional[str] = None
     password: str
 
 class TokenResponse(BaseModel):

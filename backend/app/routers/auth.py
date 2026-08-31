@@ -44,9 +44,14 @@ def register(data: UserRegister, db: Session = Depends(get_db)):
 def login(data: UserLogin, db: Session = Depends(get_db)):
     from app.auth import pwd_context
 
-    user = db.query(User).filter(User.email == data.email).first()
+    user = None
+    if data.email:
+        user = db.query(User).filter(User.email == data.email).first()
+    elif data.phone:
+        user = db.query(User).filter(User.phone == data.phone).first()
+
     if not user or not pwd_context.verify(data.password, user.password_hash):
-        raise HTTPException(status_code=401, detail="البريد الإلكتروني أو كلمة المرور غير صحيحة")
+        raise HTTPException(status_code=401, detail="بيانات الدخول غير صحيحة")
 
     if not user.is_active:
         raise HTTPException(status_code=403, detail="الحساب معطل")
