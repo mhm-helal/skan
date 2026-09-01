@@ -67,7 +67,7 @@ export default function RegisterPage() {
         animate={{ opacity: 1, y: 0 }}
         className="relative z-10 w-full max-w-md"
       >
-        <div className="p-8 rounded-3xl bg-purple-500/5 border border-purple-500/10 backdrop-blur-xl">
+        <div className="p-6 md:p-8 rounded-3xl bg-purple-500/5 border border-purple-500/10 backdrop-blur-xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white/90 mb-2">حساب جديد</h1>
             <p className="text-purple-300/50">انضم إلى آلاف الطلاب في Skan</p>
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                 <select
                   value={phoneCode}
                   onChange={(e) => setPhoneCode(e.target.value)}
-                  className="w-[140px] flex-shrink-0 px-3 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 focus:outline-none focus:border-purple-500/30 transition-colors text-sm"
+                  className="w-[110px] md:w-[140px] flex-shrink-0 px-3 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 focus:outline-none focus:border-purple-500/30 transition-colors text-sm"
                 >
                   {ARAB_COUNTRY_CODES.map((c) => (
                     <option key={c.code} value={c.code} className="bg-[#0a0514] text-white">

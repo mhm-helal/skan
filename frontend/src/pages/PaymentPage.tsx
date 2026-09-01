@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../store';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export default function PaymentPage() {
   const [searchParams] = useSearchParams();
   const bookingId = searchParams.get('booking_id');
@@ -130,7 +132,7 @@ export default function PaymentPage() {
                 { val: 'fawry', label: 'فوري' },
               ].map(m => (
                 <button key={m.val} onClick={() => setMethod(m.val)}
-                  className={`flex-1 py-2 rounded-xl text-sm font-bold transition ${method === m.val ? 'bg-purple-600 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                  className={`flex-1 py-3 rounded-xl text-sm font-bold transition ${method === m.val ? 'bg-purple-600 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
                   {m.label}
                 </button>
               ))}
@@ -148,7 +150,7 @@ export default function PaymentPage() {
           {/* Screenshot */}
           <div className="mb-6">
             <label className="text-gray-400 text-sm mb-2 block">سكرين شوت الإيصال</label>
-            <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-purple-500/50 transition">
+            <label className="flex flex-col items-center justify-center w-full min-h-[44px] h-40 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-purple-500/50 transition">
               {preview ? (
                 <img src={preview} alt="Preview" className="h-full object-contain rounded-xl" />
               ) : (

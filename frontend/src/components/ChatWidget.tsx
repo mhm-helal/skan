@@ -5,6 +5,8 @@ import { useAuth } from '../store';
 import api from '../api';
 import type { ChatMessage } from '../types';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export default function ChatWidget() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
@@ -16,7 +18,7 @@ export default function ChatWidget() {
   useEffect(() => {
     if (!user || !open) return;
     fetchMessages();
-    const interval = setInterval(fetchMessages, 3000);
+    const interval = setInterval(fetchMessages, 10000);
     return () => clearInterval(interval);
   }, [user, open]);
 
@@ -64,7 +66,7 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-40 left-6 z-50 w-80 h-96 rounded-2xl bg-[#0f0a24] border border-purple-500/10 shadow-2xl shadow-purple-500/10 flex flex-col overflow-hidden"
+            className="fixed bottom-40 left-4 right-4 md:left-auto md:right-6 z-50 w-[calc(100vw-2rem)] md:w-80 h-[70vh] md:h-96 rounded-2xl bg-[#0f0a24] border border-purple-500/10 shadow-2xl shadow-purple-500/10 flex flex-col overflow-hidden"
           >
             <div className="px-4 py-3 border-b border-purple-500/10 bg-purple-500/5">
               <h3 className="text-sm font-bold text-white/90">الدردشة مع الدعم</h3>
@@ -111,14 +113,14 @@ export default function ChatWidget() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                   placeholder="اكتب رسالتك..."
-                  className="flex-1 px-3 py-2 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 placeholder-purple-300/30 text-sm focus:outline-none focus:border-purple-500/30"
+                  className="flex-1 px-3 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 placeholder-purple-300/30 text-sm focus:outline-none focus:border-purple-500/30"
                 />
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSend}
                   disabled={loading || !input.trim()}
-                  className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white flex items-center justify-center disabled:opacity-40"
+                  className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white flex items-center justify-center disabled:opacity-40"
                 >
                   <Send size={14} />
                 </motion.button>

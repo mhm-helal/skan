@@ -35,8 +35,8 @@ body {
   50% { transform: translateY(-20px); }
 }
 
-.animate-blob { animation: blob 7s infinite; }
-.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-blob { animation: blob 7s infinite; will-change: transform; }
+.animate-float { animation: float 6s ease-in-out infinite; will-change: transform; }
 
 @media (max-width: 768px) {
   * {

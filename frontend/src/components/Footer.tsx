@@ -19,28 +19,28 @@ export default function Footer() {
 
           <div>
             <h4 className="font-bold text-white/80 mb-4">روابط سريعة</h4>
-            <ul className="space-y-2 text-sm text-purple-300/40">
-              <li><a href="/" className="hover:text-purple-300 transition-colors">الرئيسية</a></li>
-              <li><a href="/#how" className="hover:text-purple-300 transition-colors">كيف يعمل</a></li>
-              <li><a href="/register" className="hover:text-purple-300 transition-colors">حساب جديد</a></li>
+            <ul className="space-y-1 text-sm text-purple-300/40">
+              <li><a href="/" className="block py-1.5 hover:text-purple-300 transition-colors">الرئيسية</a></li>
+              <li><a href="/#how" className="block py-1.5 hover:text-purple-300 transition-colors">كيف يعمل</a></li>
+              <li><a href="/register" className="block py-1.5 hover:text-purple-300 transition-colors">حساب جديد</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold text-white/80 mb-4">الدعم</h4>
-            <ul className="space-y-2 text-sm text-purple-300/40">
-              <li><a href="#" className="hover:text-purple-300 transition-colors">الأسئلة الشائعة</a></li>
-              <li><a href="#" className="hover:text-purple-300 transition-colors">تواصل معنا</a></li>
-              <li><a href="#" className="hover:text-purple-300 transition-colors">سياسة الخصوصية</a></li>
+            <ul className="space-y-1 text-sm text-purple-300/40">
+              <li><a href="#" className="block py-1.5 hover:text-purple-300 transition-colors">الأسئلة الشائعة</a></li>
+              <li><a href="#" className="block py-1.5 hover:text-purple-300 transition-colors">تواصل معنا</a></li>
+              <li><a href="#" className="block py-1.5 hover:text-purple-300 transition-colors">سياسة الخصوصية</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold text-white/80 mb-4">تواصل معنا</h4>
-            <ul className="space-y-2 text-sm text-purple-300/40">
-              <li>skan.egypt@gmail.com</li>
-              <li dir="ltr">010 910 20130</li>
-              <li>مصر</li>
+            <ul className="space-y-1 text-sm text-purple-300/40">
+              <li className="py-1.5">skan.egypt@gmail.com</li>
+              <li className="py-1.5" dir="ltr">010 910 20130</li>
+              <li className="py-1.5">مصر</li>
             </ul>
           </div>
         </div>

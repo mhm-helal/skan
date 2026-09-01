@@ -6,6 +6,12 @@ import { useAuth } from '../store';
 import api from '../api';
 import type { Property } from '../types';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+function imageUrl(url: string) {
+  return url.startsWith('/uploads') ? `${API_BASE}${url}` : url;
+}
+
 type Tab = 'details' | '3d' | 'features' | 'gallery';
 
 export default function PropertyDetailPage() {
@@ -78,11 +84,11 @@ export default function PropertyDetailPage() {
                 <img
                   src={property.image_url || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=500&fit=crop'}
                   alt={property.title}
-                  className="w-full h-[400px] object-cover"
+                  className="w-full h-[250px] md:h-[400px] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0514] via-transparent to-transparent" />
                 <div className="absolute bottom-6 right-6">
-                  <h1 className="text-3xl font-bold text-white/90 mb-2">{property.title}</h1>
+                  <h1 className="text-2xl md:text-3xl font-bold text-white/90 mb-2">{property.title}</h1>
                   <div className="flex items-center gap-2 text-purple-300/60">
                     <MapPin size={16} />
                     {property.address}, {property.city}
@@ -90,12 +96,12 @@ export default function PropertyDetailPage() {
                 </div>
               </div>
 
-              <div className="flex gap-2 p-1 rounded-2xl bg-purple-500/5 border border-purple-500/10">
+              <div className="flex gap-2 p-1 rounded-2xl bg-purple-500/5 border border-purple-500/10 overflow-x-auto flex-nowrap">
                 {(['details', 'gallery', '3d', 'features'] as Tab[]).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    className={`min-w-[100px] min-h-[44px] flex-shrink-0 py-2.5 rounded-xl text-sm font-medium transition-all ${
                       activeTab === tab
                         ? 'bg-purple-500/20 text-purple-300'
                         : 'text-purple-300/40 hover:text-purple-300/60'
@@ -127,7 +133,7 @@ export default function PropertyDetailPage() {
                             className="relative aspect-square rounded-xl overflow-hidden group"
                           >
                             <img
-                              src={url.startsWith('/uploads') ? `http://localhost:8000${url}` : url}
+                              src={imageUrl(url)}
                               alt={`${property.title} - ${i + 1}`}
                               className="w-full h-full object-cover"
                             />
@@ -160,7 +166,7 @@ export default function PropertyDetailPage() {
                   </div>
                 )}
                 {activeTab === 'features' && (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {features.map((f) => (
                       <div key={f.label} className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/10">
                         <div className="text-sm text-purple-300/40 mb-1">{f.label}</div>
@@ -288,19 +294,19 @@ export default function PropertyDetailPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="max-w-5xl max-h-[85vh] px-16"
+              className="max-w-5xl max-h-[85vh] px-4 md:px-16"
               onClick={(e) => e.stopPropagation()}
             >
               {property.media_urls[lightboxIndex].endsWith('.mp4') || property.media_urls[lightboxIndex].endsWith('.webm') || property.media_urls[lightboxIndex].endsWith('.mov') ? (
                 <video
-                  src={property.media_urls[lightboxIndex].startsWith('/uploads') ? `http://localhost:8000${property.media_urls[lightboxIndex]}` : property.media_urls[lightboxIndex]}
+                  src={imageUrl(property.media_urls[lightboxIndex])}
                   controls
                   autoPlay
                   className="max-w-full max-h-[80vh] rounded-2xl mx-auto"
                 />
               ) : (
                 <img
-                  src={property.media_urls[lightboxIndex].startsWith('/uploads') ? `http://localhost:8000${property.media_urls[lightboxIndex]}` : property.media_urls[lightboxIndex]}
+                  src={imageUrl(property.media_urls[lightboxIndex])}
                   alt={`${property.title} - ${lightboxIndex + 1}`}
                   className="max-w-full max-h-[80vh] object-contain rounded-2xl mx-auto"
                 />
@@ -312,8 +318,10 @@ export default function PropertyDetailPage() {
                 <button
                   key={i}
                   onClick={(e) => { e.stopPropagation(); setLightboxIndex(i); }}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${i === lightboxIndex ? 'bg-white' : 'bg-white/30 hover:bg-white/50'}`}
-                />
+                  className={`p-2 rounded-full ${i === lightboxIndex ? 'bg-white' : 'bg-white/30 hover:bg-white/50'}`}
+                >
+                  <span className={`block w-3 h-3 rounded-full ${i === lightboxIndex ? 'bg-current' : 'bg-current'}`} />
+                </button>
               ))}
             </div>
           </motion.div>

@@ -112,7 +112,7 @@ export default function AdminPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+                className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
                   activeTab === tab.id
                     ? 'bg-purple-500/20 text-purple-300'
                     : 'text-purple-300/40'
@@ -180,7 +180,7 @@ export default function AdminPage() {
 
               <div className="space-y-3">
                 {properties.map((p) => (
-                  <div key={p.id} className="flex items-center gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10">
+                  <div key={p.id} className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10">
                     <img src={p.image_url || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=100&h=100&fit=crop'} alt={p.title} className="w-16 h-16 rounded-xl object-cover" />
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-white/90 truncate">{p.title}</h3>
@@ -192,16 +192,16 @@ export default function AdminPage() {
                         {p.is_available ? 'متاح' : 'غير متاح'}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 w-full md:w-auto justify-end">
                       <button
                         onClick={() => { setModalType('editProperty'); setSelectedItem(p); setShowModal(true); }}
-                        className="p-2 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors"
+                        className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2.5 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors"
                       >
                         <Edit3 size={14} />
                       </button>
                       <button
                         onClick={() => handleDeleteProperty(p.id)}
-                        className="p-2 rounded-lg bg-red-500/10 text-red-300 hover:bg-red-500/20 transition-colors"
+                        className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2.5 rounded-lg bg-red-500/10 text-red-300 hover:bg-red-500/20 transition-colors"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -237,7 +237,7 @@ export default function AdminPage() {
 
               <div className="space-y-3">
                 {admins.map((a) => (
-                  <div key={a.id} className="flex items-center gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10">
+                  <div key={a.id} className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
                       {a.name?.charAt(0) || 'A'}
                     </div>
@@ -250,7 +250,7 @@ export default function AdminPage() {
                     </span>
                     <button
                       onClick={() => handleDeleteAdmin(a.id)}
-                      className="p-2 rounded-lg bg-red-500/10 text-red-300 hover:bg-red-500/20 transition-colors"
+                      className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2.5 rounded-lg bg-red-500/10 text-red-300 hover:bg-red-500/20 transition-colors"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -273,7 +273,7 @@ export default function AdminPage() {
               <h2 className="text-2xl font-bold text-white/90 mb-6">إدارة الحجوزات</h2>
               <div className="space-y-3">
                 {bookings.map((b) => (
-                  <div key={b.id} className="flex items-center gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10">
+                  <div key={b.id} className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-white/90 truncate">{b.property_title}</h3>
                       <p className="text-sm text-purple-300/40">
@@ -292,7 +292,7 @@ export default function AdminPage() {
                     </div>
                     <button
                       onClick={() => { setSelectedItem(b); setShowModal(true); }}
-                      className="p-2 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors"
+                      className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2.5 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors"
                     >
                       <Eye size={14} />
                     </button>
@@ -315,7 +315,7 @@ export default function AdminPage() {
               <h2 className="text-2xl font-bold text-white/90 mb-6">إدارة المدفوعات</h2>
               <div className="space-y-3">
                 {payments.map((p) => (
-                  <div key={p.id} className="flex items-center gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10">
+                  <div key={p.id} className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-white/90 truncate">{p.property_title || `حجز #${p.booking_id}`}</h3>
                       <p className="text-sm text-purple-300/40">
@@ -334,7 +334,7 @@ export default function AdminPage() {
                     </div>
                     <button
                       onClick={() => { setSelectedItem(p); setModalType('viewPayment'); setShowModal(true); }}
-                      className="p-2 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors"
+                      className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2.5 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors"
                     >
                       <Eye size={14} />
                     </button>
@@ -409,7 +409,7 @@ export default function AdminPage() {
                   {modalType === 'addAdmin' && 'إضافة مسؤول جديد'}
                   {modalType === 'viewBooking' && 'تفاصيل الحجز'}
                 </h3>
-                <button onClick={() => setShowModal(false)} className="p-2 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20">
+                <button onClick={() => setShowModal(false)} className="p-3 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20">
                   <X size={18} />
                 </button>
               </div>
@@ -606,7 +606,7 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
 
       <div>
         <label className="block text-xs text-purple-300/50 mb-1">وسائط إضافية (صور + فيديو)</label>
-        <div className="grid grid-cols-4 gap-2 mb-2">
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-2 mb-2">
           {form.media_urls.map((url: string, i: number) => (
             <div key={i} className="relative group">
               {url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov') ? (
@@ -614,7 +614,7 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
               ) : (
                 <img src={url.startsWith('/uploads') ? `http://localhost:8000${url}` : url} alt="" className="w-full aspect-square rounded-lg object-cover" />
               )}
-              <button type="button" onClick={() => removeMedia(i)} className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <button type="button" onClick={() => removeMedia(i)} className="absolute -top-1 -left-1 w-8 h-8 rounded-full bg-red-500 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 x
               </button>
             </div>
@@ -628,11 +628,11 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
 
       <input className={inputClass} placeholder="عنوان العقار" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
       <input className={inputClass} placeholder="العنوان التفصيلي" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required />
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <input className={inputClass} placeholder="المدينة" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required />
         <input className={inputClass} type="number" placeholder="السعر" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
       </div>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <input className={inputClass} type="number" placeholder="الغرف" value={form.rooms} onChange={(e) => setForm({ ...form, rooms: e.target.value })} required />
         <input className={inputClass} type="number" placeholder="الحمامات" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: e.target.value })} required />
         <input className={inputClass} type="number" placeholder="المساحة" value={form.area} onChange={(e) => setForm({ ...form, area: e.target.value })} required />

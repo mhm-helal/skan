@@ -1,10 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SkanLogo from './SkanLogo';
 
 export default function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const [progress, setProgress] = useState(0);
   const [done, setDone] = useState(false);
+  const blobs = useMemo(() =>
+    [...Array(20)].map((_, i) => ({
+      width: Math.random() * 80 + 20,
+      height: Math.random() * 80 + 20,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 5,
+    })),
+  []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,16 +38,16 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {[...Array(20)].map((_, i) => (
+          {blobs.map((b, i) => (
             <div
               key={i}
               className="absolute rounded-full bg-purple-500/10 animate-blob"
               style={{
-                width: Math.random() * 80 + 20,
-                height: Math.random() * 80 + 20,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
+                width: b.width,
+                height: b.height,
+                left: `${b.left}%`,
+                top: `${b.top}%`,
+                animationDelay: `${b.delay}s`,
               }}
             />
           ))}

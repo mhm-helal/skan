@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Send, MessageCircle } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Send, MessageCircle } from 'lucide-react';
 import { useAuth } from '../store';
 import api from '../api';
 import type { ChatMessage, ChatConversation } from '../types';
@@ -22,14 +22,14 @@ export default function AdminChatPage() {
       return;
     }
     fetchConversations();
-    const interval = setInterval(fetchConversations, 5000);
+    const interval = setInterval(fetchConversations, 15000);
     return () => clearInterval(interval);
   }, [user, navigate]);
 
   useEffect(() => {
     if (!selectedUser) return;
     fetchMessages(selectedUser);
-    const interval = setInterval(() => fetchMessages(selectedUser), 3000);
+    const interval = setInterval(() => fetchMessages(selectedUser), 10000);
     return () => clearInterval(interval);
   }, [selectedUser]);
 
@@ -64,16 +64,25 @@ export default function AdminChatPage() {
     }
   };
 
+  const handleSelectConversation = (userId: number) => {
+    setSelectedUser(userId);
+  };
+
+  const handleBack = () => {
+    setSelectedUser(null);
+  };
+
   const selectedConv = conversations.find((c) => c.user_id === selectedUser);
 
   return (
     <div className="min-h-screen pt-20 pb-24 flex">
       <div className="flex-1 flex">
-        <div className="w-full md:w-80 border-l border-purple-500/10 bg-purple-500/5 flex flex-col">
+        {/* Conversation list */}
+        <div className={`w-full md:w-80 border-l border-purple-500/10 bg-purple-500/5 flex flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
           <div className="p-4 border-b border-purple-500/10 flex items-center gap-3">
             <button
               onClick={() => navigate('/admin')}
-              className="p-2 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors"
+              className="min-w-[44px] min-h-[44px] p-2 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors flex items-center justify-center"
             >
               <ArrowRight size={18} />
             </button>
@@ -89,8 +98,8 @@ export default function AdminChatPage() {
             {conversations.map((conv) => (
               <button
                 key={conv.user_id}
-                onClick={() => setSelectedUser(conv.user_id)}
-                className={`w-full text-right p-4 border-b border-purple-500/5 transition-colors ${
+                onClick={() => handleSelectConversation(conv.user_id)}
+                className={`w-full text-right p-4 border-b border-purple-500/5 transition-colors min-h-[44px] ${
                   selectedUser === conv.user_id
                     ? 'bg-purple-500/10'
                     : 'hover:bg-purple-500/5'
@@ -117,10 +126,17 @@ export default function AdminChatPage() {
           </div>
         </div>
 
-        <div className="hidden md:flex flex-1 flex-col">
+        {/* Chat panel */}
+        <div className={`flex-1 flex-col ${selectedUser ? 'flex' : 'hidden md:flex'}`}>
           {selectedUser ? (
             <>
-              <div className="px-6 py-3 border-b border-purple-500/10 bg-purple-500/5">
+              <div className="px-4 md:px-6 py-3 border-b border-purple-500/10 bg-purple-500/5 flex items-center gap-3">
+                <button
+                  onClick={handleBack}
+                  className="md:hidden min-w-[44px] min-h-[44px] p-2 rounded-lg bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition-colors flex items-center justify-center"
+                >
+                  <ArrowLeft size={18} />
+                </button>
                 <h3 className="font-bold text-white/90">{selectedConv?.user_name || 'محادثة'}</h3>
               </div>
 
@@ -157,17 +173,17 @@ export default function AdminChatPage() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                     placeholder="اكتب الرد..."
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 placeholder-purple-300/30 text-sm focus:outline-none focus:border-purple-500/30"
+                    className="flex-1 px-4 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 placeholder-purple-300/30 text-sm focus:outline-none focus:border-purple-500/30 min-h-[44px]"
                   />
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleSend}
                     disabled={loading || !input.trim()}
-                    className="px-4 py-2.5 rounded-xl bg-gradient-to-l from-purple-500 to-pink-500 text-white font-bold text-sm disabled:opacity-40 flex items-center gap-2"
+                    className="px-4 py-3 rounded-xl bg-gradient-to-l from-purple-500 to-pink-500 text-white font-bold text-sm disabled:opacity-40 flex items-center gap-2 min-h-[44px] min-w-[44px] justify-center"
                   >
                     <Send size={14} />
-                    إرسال
+                    <span className="hidden sm:inline">إرسال</span>
                   </motion.button>
                 </div>
               </div>

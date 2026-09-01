@@ -86,7 +86,7 @@ export default function LoginPage() {
         animate={{ opacity: 1, y: 0 }}
         className="relative z-10 w-full max-w-md"
       >
-        <div className="p-8 rounded-3xl bg-purple-500/5 border border-purple-500/10 backdrop-blur-xl">
+        <div className="p-6 md:p-8 rounded-3xl bg-purple-500/5 border border-purple-500/10 backdrop-blur-xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white/90 mb-2">تسجيل الدخول</h1>
             <p className="text-purple-300/50">أدخل بياناتك للوصول إلى حسابك</p>
@@ -96,7 +96,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setLoginType('email')}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 loginType === 'email'
                   ? 'bg-purple-500/20 text-purple-300'
                   : 'text-purple-300/40 hover:text-purple-300/60'
@@ -108,7 +108,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setLoginType('phone')}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 loginType === 'phone'
                   ? 'bg-purple-500/20 text-purple-300'
                   : 'text-purple-300/40 hover:text-purple-300/60'
@@ -148,7 +148,7 @@ export default function LoginPage() {
                   <select
                     value={phoneCode}
                     onChange={(e) => setPhoneCode(e.target.value)}
-                    className="w-[120px] flex-shrink-0 px-3 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 focus:outline-none focus:border-purple-500/30 transition-colors text-sm"
+                    className="w-[100px] md:w-[120px] flex-shrink-0 px-3 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 focus:outline-none focus:border-purple-500/30 transition-colors text-sm"
                   >
                     <option value="+20" className="bg-[#0a0514]">🇪🇬 +20</option>
                     <option value="+966" className="bg-[#0a0514]">🇸🇦 +966</option>

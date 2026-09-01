@@ -1,8 +1,19 @@
-import { useRef, useState, useEffect, lazy, Suspense } from 'react';
+import { useRef, useState, useEffect, useMemo, lazy, Suspense } from 'react';
 
 const Scene3DHeavy = lazy(() => import('./Scene3DHeavy'));
 
 function LightScene() {
+  const circles = useMemo(() =>
+    [...Array(20)].map((_, i) => ({
+      width: Math.random() * 60 + 20,
+      height: Math.random() * 60 + 20,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 4,
+      delay: Math.random() * 2,
+    })),
+  []);
+
   return (
     <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
@@ -17,17 +28,17 @@ function LightScene() {
         </div>
         <div className="relative rounded-3xl overflow-hidden border border-purple-500/10 bg-[#0a0514] h-[300px] md:h-[400px] flex items-center justify-center">
           <div className="absolute inset-0 overflow-hidden">
-            {[...Array(20)].map((_, i) => (
+            {circles.map((c, i) => (
               <div
                 key={i}
                 className="absolute rounded-full bg-purple-500/10"
                 style={{
-                  width: `${Math.random() * 60 + 20}px`,
-                  height: `${Math.random() * 60 + 20}px`,
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
-                  animationDelay: `${Math.random() * 2}s`,
+                  width: `${c.width}px`,
+                  height: `${c.height}px`,
+                  left: `${c.left}%`,
+                  top: `${c.top}%`,
+                  animation: `float ${c.duration}s ease-in-out infinite`,
+                  animationDelay: `${c.delay}s`,
                 }}
               />
             ))}

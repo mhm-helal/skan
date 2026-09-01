@@ -1,13 +1,22 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Float, MeshDistortMaterial, RoundedBox } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 
+const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+
 function Room() {
   const groupRef = useRef<THREE.Group>(null);
+  const plantData = useMemo(() =>
+    [0, 1, 2, 3, 4, 5].map(() => ({
+      yOffset: Math.random() * 0.4,
+      radius: 0.08 + Math.random() * 0.06,
+    })), []
+  );
 
   useFrame((_, delta) => {
+    if (document.visibilityState === 'hidden') return;
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * 0.05;
     }
@@ -77,10 +86,10 @@ function Room() {
           <cylinderGeometry args={[0.15, 0.15, 1.2, 8]} />
           <meshStandardMaterial color="#1e1145" />
         </mesh>
-        {[0, 1, 2, 3, 4, 5].map((i) => (
+        {plantData.map((data, i) => (
           <Float key={i} speed={1} rotationIntensity={0.3} floatIntensity={0.5}>
-            <mesh position={[Math.sin(i * 1.05) * 0.4, 0.6 + Math.random() * 0.4, Math.cos(i * 1.05) * 0.4]}>
-              <sphereGeometry args={[0.08 + Math.random() * 0.06, 8, 8]} />
+            <mesh position={[Math.sin(i * 1.05) * 0.4, 0.6 + data.yOffset, Math.cos(i * 1.05) * 0.4]}>
+              <sphereGeometry args={[data.radius, 8, 8]} />
               <meshStandardMaterial color={i % 2 === 0 ? '#22c55e' : '#16a34a'} />
             </mesh>
           </Float>
@@ -152,7 +161,7 @@ export default function Scene3DHeavy() {
 
         <div className="relative rounded-3xl overflow-hidden border border-purple-500/10 bg-[#0a0514]">
           <div className="h-[400px] md:h-[500px]">
-            <Canvas camera={{ position: [5, 3, 5], fov: 50 }}>
+            <Canvas camera={{ position: [5, 3, 5], fov: 50 }} dpr={[1, 1.5]}>
               <fog attach="fog" args={['#0a0514', 5, 15]} />
               <Lights />
               <Room />
@@ -165,9 +174,11 @@ export default function Scene3DHeavy() {
                 minPolarAngle={Math.PI / 4}
               />
               <Environment preset="night" />
-              <EffectComposer>
-                <Bloom luminanceThreshold={0.5} luminanceSmoothing={0.9} intensity={0.5} />
-              </EffectComposer>
+              {!isMobile && (
+                <EffectComposer>
+                  <Bloom luminanceThreshold={0.5} luminanceSmoothing={0.9} intensity={0.5} />
+                </EffectComposer>
+              )}
             </Canvas>
           </div>
           <div className="absolute bottom-4 left-4 right-4 flex justify-center">

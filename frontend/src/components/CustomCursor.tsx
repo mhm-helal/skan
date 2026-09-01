@@ -27,16 +27,23 @@ export default function CustomCursor() {
     const down = () => setClicking(true);
     const up = () => setClicking(false);
 
+    const interactiveSelector = 'a, button, input, textarea, select, [role="button"]';
+    const onEnter = (e: MouseEvent) => {
+      if ((e.target as HTMLElement)?.closest(interactiveSelector)) {
+        setHovered(true);
+      }
+    };
+    const onLeave = (e: MouseEvent) => {
+      if ((e.target as HTMLElement)?.closest(interactiveSelector)) {
+        setHovered(false);
+      }
+    };
+
     window.addEventListener('mousemove', move);
     window.addEventListener('mousedown', down);
     window.addEventListener('mouseup', up);
-
-    const interval = setInterval(() => {
-      document.querySelectorAll('a, button, input, textarea, select, [role="button"]').forEach((el) => {
-        el.addEventListener('mouseenter', () => setHovered(true));
-        el.addEventListener('mouseleave', () => setHovered(false));
-      });
-    }, 500);
+    document.addEventListener('mouseenter', onEnter, true);
+    document.addEventListener('mouseleave', onLeave, true);
 
     let raf: number;
     const animate = () => {
@@ -69,7 +76,8 @@ export default function CustomCursor() {
       window.removeEventListener('mousemove', move);
       window.removeEventListener('mousedown', down);
       window.removeEventListener('mouseup', up);
-      clearInterval(interval);
+      document.removeEventListener('mouseenter', onEnter, true);
+      document.removeEventListener('mouseleave', onLeave, true);
       cancelAnimationFrame(raf);
     };
   }, [isDesktop, hovered, clicking]);

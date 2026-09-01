@@ -5,7 +5,7 @@ import { useAuth } from '../store';
 
 const navItems = [
   { to: '/', icon: Home, label: 'الرئيسية' },
-  { to: '/properties', icon: Building2, label: 'العقارات' },
+  { to: '/', icon: Building2, label: 'العقارات' },
   { to: '/#how', icon: HelpCircle, label: 'كيف يعمل' },
   { to: '/#contact', icon: Phone, label: 'تواصل معنا' },
 ];
@@ -29,7 +29,7 @@ export default function DockNav() {
             <Link
               key={item.to}
               to={item.to}
-              className="relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-colors group"
+              className="relative flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl transition-colors group"
             >
               {isActive && (
                 <motion.div
@@ -57,7 +57,7 @@ export default function DockNav() {
         <div className="w-px h-8 bg-purple-500/20 mx-1" />
         <Link
           to={user ? '/admin' : '/login'}
-          className="relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-colors group"
+          className="relative flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl transition-colors group"
         >
           <User
             size={20}
