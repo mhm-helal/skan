@@ -59,6 +59,7 @@ class PropertyCreate(BaseModel):
     city: str
     price: int
     image_url: Optional[str] = None
+    media_urls: Optional[List[str]] = None
     rooms: int = 1
     bathrooms: int = 1
     area: Optional[float] = None
@@ -74,6 +75,7 @@ class PropertyUpdate(BaseModel):
     city: Optional[str] = None
     price: Optional[int] = None
     image_url: Optional[str] = None
+    media_urls: Optional[List[str]] = None
     rooms: Optional[int] = None
     bathrooms: Optional[int] = None
     area: Optional[float] = None
@@ -90,6 +92,7 @@ class PropertyResponse(BaseModel):
     city: str
     price: int
     image_url: Optional[str] = None
+    media_urls: Optional[List[str]] = None
     rooms: int
     bathrooms: int
     area: Optional[float] = None
@@ -102,6 +105,15 @@ class PropertyResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SiteSettingsResponse(BaseModel):
+    properties_count: int = 2500
+    students_count: int = 10000
+    cities_count: int = 15
+    rating: str = "4.8"
+    satisfaction: str = "100"
+    response_time: str = "24"
 
 
 # ── Booking ───────────────────────────────────────────

@@ -12,9 +12,10 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
+    password_hash = Column(String(255), nullable=True)
     phone = Column(String(50), nullable=True)
     phone_verified = Column(Boolean, default=False)
+    google_id = Column(String(255), unique=True, nullable=True)
     is_active = Column(Boolean, default=True)
     two_factor_secret = Column(String(255), nullable=True)
     two_factor_enabled = Column(Boolean, default=False)
@@ -30,6 +31,7 @@ class Property(Base):
     city = Column(String(255), nullable=False)
     price = Column(Integer, nullable=False)
     image_url = Column(String(1000), nullable=True)
+    media_urls = Column(JSON, nullable=True)
     rooms = Column(Integer, default=1)
     bathrooms = Column(Integer, default=1)
     area = Column(Float, nullable=True)
@@ -104,3 +106,12 @@ class ChatMessage(Base):
     is_admin = Column(Boolean, default=False)
     is_read = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class SiteSettings(Base):
+    __tablename__ = "site_settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String(255), unique=True, nullable=False, index=True)
+    value = Column(Text, nullable=True)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

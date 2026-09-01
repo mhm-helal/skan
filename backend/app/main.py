@@ -151,7 +151,7 @@ app.add_middleware(
 
 # ── Routers ───────────────────────────────────────────
 
-from app.routers import auth, properties, bookings, admin, payments, phone, chat
+from app.routers import auth, properties, bookings, admin, payments, phone, chat, uploads
 
 app.include_router(auth.router)
 app.include_router(properties.router)
@@ -160,14 +160,15 @@ app.include_router(admin.router)
 app.include_router(payments.router)
 app.include_router(phone.router)
 app.include_router(chat.router)
+app.include_router(uploads.router)
 
 # ── Static Files (uploads) ─────────────────────────────
 from fastapi.staticfiles import StaticFiles
 import os
 
 uploads_dir = os.path.join(os.path.dirname(__file__), "..", "uploads")
-if os.path.exists(uploads_dir):
-    app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+os.makedirs(uploads_dir, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
 
 @app.get("/", tags=["الصحة"])

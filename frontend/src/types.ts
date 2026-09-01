@@ -13,6 +13,7 @@ export interface Property {
   city: string;
   price: number;
   image_url: string;
+  media_urls?: string[];
   rooms: number;
   bathrooms: number;
   area: number;

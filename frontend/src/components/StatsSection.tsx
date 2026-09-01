@@ -1,16 +1,49 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Building2, Users, MapPin, Star, Shield, Clock } from 'lucide-react';
+import api from '../api';
 
-const stats = [
-  { icon: Building2, value: '٢,٥٠٠+', label: 'عقار متاح', color: 'from-purple-500 to-violet-500' },
-  { icon: Users, value: '١٠,٠٠٠+', label: 'طالب مسجل', color: 'from-pink-500 to-rose-500' },
-  { icon: MapPin, value: '١٥+', label: 'مدينة', color: 'from-indigo-500 to-blue-500' },
-  { icon: Star, value: '٤.٨', label: 'متوسط التقييم', color: 'from-amber-500 to-yellow-500' },
-  { icon: Shield, value: '١٠٠٪', label: 'معاملات آمنة', color: 'from-green-500 to-emerald-500' },
-  { icon: Clock, value: '٢٤ ساعة', label: 'سرعة الاستجابة', color: 'from-cyan-500 to-teal-500' },
-];
+interface SiteStats {
+  properties_count: string;
+  students_count: string;
+  cities_count: string;
+  rating: string;
+  satisfaction: string;
+  response_time: string;
+}
+
+const defaults: SiteStats = {
+  properties_count: '2500',
+  students_count: '10000',
+  cities_count: '15',
+  rating: '4.8',
+  satisfaction: '100',
+  response_time: '24',
+};
+
+function toArabicNum(n: string): string {
+  const arabicDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  return n.replace(/\d/g, (d) => arabicDigits[parseInt(d)]);
+}
 
 export default function StatsSection() {
+  const [settings, setSettings] = useState<SiteStats>(defaults);
+
+  useEffect(() => {
+    api.get('/api/uploads/settings').then((res) => {
+      setSettings((prev) => ({ ...prev, ...res.data }));
+    }).catch(() => {});
+  }, []);
+
+  const stats = [
+    { icon: Building2, value: toArabicNum(settings.properties_count) + '+', label: 'عقار متاح', color: 'from-purple-500 to-violet-500' },
+    { icon: Users, value: toArabicNum(settings.students_count) + '+', label: 'طالب مسجل', color: 'from-pink-500 to-rose-500' },
+    { icon: MapPin, value: toArabicNum(settings.cities_count) + '+', label: 'مدينة', color: 'from-indigo-500 to-blue-500' },
+    { icon: Star, value: settings.rating, label: 'متوسط التقييم', color: 'from-amber-500 to-yellow-500' },
+    { icon: Shield, value: toArabicNum(settings.satisfaction) + '%', label: 'معاملات آمنة', color: 'from-green-500 to-emerald-500' },
+    { icon: Clock, value: toArabicNum(settings.response_time) + ' ساعة', label: 'سرعة الاستجابة', color: 'from-cyan-500 to-teal-500' },
+  ];
+
   return (
     <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">

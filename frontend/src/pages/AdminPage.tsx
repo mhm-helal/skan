@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Building2, Users, BookOpen, Plus, Edit3, Trash2,
-  X, Eye, CreditCard, MessageCircle
+  X, Eye, CreditCard, MessageCircle, Settings
 } from 'lucide-react';
 import { useAuth } from '../store';
 import api from '../api';
 import type { Property, Booking, Admin, Payment } from '../types';
 
-type SidebarTab = 'stats' | 'properties' | 'admins' | 'bookings' | 'payments' | 'chat';
+type SidebarTab = 'stats' | 'properties' | 'admins' | 'bookings' | 'payments' | 'chat' | 'settings';
 
 export default function AdminPage() {
   const { user } = useAuth();
@@ -69,6 +69,7 @@ export default function AdminPage() {
     { id: 'bookings' as SidebarTab, icon: BookOpen, label: 'الحجوزات' },
     { id: 'payments' as SidebarTab, icon: CreditCard, label: 'المدفوعات' },
     { id: 'chat' as SidebarTab, icon: MessageCircle, label: 'الدردشة' },
+    { id: 'settings' as SidebarTab, icon: Settings, label: 'الإعدادات' },
   ];
 
   return (
@@ -371,6 +372,17 @@ export default function AdminPage() {
               </div>
             </motion.div>
           )}
+
+          {activeTab === 'settings' && (
+            <motion.div
+              key="settings"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <SiteSettingsPanel />
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 
@@ -486,6 +498,7 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
     city: initial?.city || '',
     price: initial?.price || '',
     image_url: initial?.image_url || '',
+    media_urls: initial?.media_urls || [],
     rooms: initial?.rooms || '',
     bathrooms: initial?.bathrooms || '',
     area: initial?.area || '',
@@ -496,7 +509,50 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
     is_available: initial?.is_available ?? 1,
   });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await api.post('/uploads/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+      setForm(prev => ({ ...prev, image_url: res.data.url }));
+    } catch {
+      setError('فشل رفع الصورة');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    setUploading(true);
+    try {
+      const newUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const fd = new FormData();
+        fd.append('file', files[i]);
+        const isVideo = files[i].type.startsWith('video/');
+        const endpoint = isVideo ? '/uploads/video' : '/uploads/image';
+        const res = await api.post(endpoint, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        newUrls.push(res.data.url);
+      }
+      setForm(prev => ({ ...prev, media_urls: [...prev.media_urls, ...newUrls] }));
+    } catch {
+      setError('فشل رفع الملفات');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeMedia = (index: number) => {
+    setForm(prev => ({ ...prev, media_urls: prev.media_urls.filter((_: string, i: number) => i !== index) }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -511,6 +567,7 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
         area: Number(form.area),
         tags: form.tags ? form.tags.split(',').map((t: string) => t.trim()).filter(Boolean) : [],
         is_available: Number(form.is_available),
+        media_urls: form.media_urls,
       };
       let res;
       if (initial?.id) {
@@ -520,7 +577,7 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
       }
       onSaved(res.data);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'حدث خطأ');
+      setError(err.response?.data?.detail || err.response?.data?.message || 'حدث خطأ');
     } finally {
       setLoading(false);
     }
@@ -531,6 +588,44 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       {error && <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-sm">{error}</div>}
+
+      <div>
+        <label className="block text-xs text-purple-300/50 mb-1">صورة العقار الرئيسية</label>
+        <div className="flex items-center gap-3">
+          {form.image_url && (
+            <img src={form.image_url.startsWith('/uploads') ? `http://localhost:8000${form.image_url}` : form.image_url} alt="" className="w-16 h-16 rounded-xl object-cover" />
+          )}
+          <label className="flex-1 flex items-center justify-center py-2 rounded-xl border border-dashed border-purple-500/20 bg-purple-500/5 text-purple-300/40 text-sm cursor-pointer hover:border-purple-500/30 transition-colors">
+            {uploading ? 'جاري الرفع...' : 'اختر صورة'}
+            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+          </label>
+        </div>
+      </div>
+
+      <input className={inputClass} placeholder="رابط الصورة (URL بديل)" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+
+      <div>
+        <label className="block text-xs text-purple-300/50 mb-1">وسائط إضافية (صور + فيديو)</label>
+        <div className="grid grid-cols-4 gap-2 mb-2">
+          {form.media_urls.map((url: string, i: number) => (
+            <div key={i} className="relative group">
+              {url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov') ? (
+                <div className="w-full aspect-square rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-300/40 text-xs">فيديو</div>
+              ) : (
+                <img src={url.startsWith('/uploads') ? `http://localhost:8000${url}` : url} alt="" className="w-full aspect-square rounded-lg object-cover" />
+              )}
+              <button type="button" onClick={() => removeMedia(i)} className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                x
+              </button>
+            </div>
+          ))}
+          <label className="w-full aspect-square rounded-lg border border-dashed border-purple-500/20 bg-purple-500/5 flex items-center justify-center text-purple-300/40 text-xs cursor-pointer hover:border-purple-500/30 transition-colors">
+            {uploading ? '...' : '+'}
+            <input type="file" accept="image/*,video/*" multiple onChange={handleMediaUpload} className="hidden" />
+          </label>
+        </div>
+      </div>
+
       <input className={inputClass} placeholder="عنوان العقار" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
       <input className={inputClass} placeholder="العنوان التفصيلي" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required />
       <div className="grid grid-cols-2 gap-3">
@@ -542,7 +637,6 @@ function PropertyForm({ initial, onClose, onSaved }: { initial: any; onClose: ()
         <input className={inputClass} type="number" placeholder="الحمامات" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: e.target.value })} required />
         <input className={inputClass} type="number" placeholder="المساحة" value={form.area} onChange={(e) => setForm({ ...form, area: e.target.value })} required />
       </div>
-      <input className={inputClass} placeholder="رابط الصورة" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
       <input className={inputClass} placeholder="الوسوم (مفصولة بفواصل)" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
       <input className={inputClass} placeholder="اسم المالك" value={form.owner_name} onChange={(e) => setForm({ ...form, owner_name: e.target.value })} required />
       <input className={inputClass} placeholder="هاتف المالك" value={form.owner_phone} onChange={(e) => setForm({ ...form, owner_phone: e.target.value })} required />
@@ -647,13 +741,101 @@ function PaymentDetails({ payment, onAction }: { payment: Payment; onAction: (ac
       {payment.status === 'pending' && (
         <div className="flex gap-3 pt-2">
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handle('approve')} disabled={loading} className="flex-1 py-2.5 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-sm disabled:opacity-50">
-            ✅ قبول
+            قبول
           </motion.button>
           <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => handle('reject')} disabled={loading} className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm disabled:opacity-50">
-            ❌ رفض
+            رفض
           </motion.button>
         </div>
       )}
+    </div>
+  );
+}
+
+function SiteSettingsPanel() {
+  const [form, setForm] = useState({
+    properties_count: '2500',
+    students_count: '10000',
+    cities_count: '15',
+    rating: '4.8',
+    satisfaction: '100',
+    response_time: '24',
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState('');
+
+  useEffect(() => {
+    api.get('/api/uploads/settings').then((res) => {
+      setForm(res.data);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setMsg('');
+    try {
+      await api.put('/api/uploads/settings', form);
+      setMsg('تم الحفظ بنجاح');
+    } catch {
+      setMsg('حدث خطأ أثناء الحفظ');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const inputClass = "w-full px-4 py-2.5 rounded-xl bg-purple-500/5 border border-purple-500/10 text-white/90 placeholder-purple-300/30 focus:outline-none focus:border-purple-500/30 text-sm";
+
+  if (loading) return <div className="text-center py-12 text-purple-300/40">جاري التحميل...</div>;
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-white/90 mb-6">إعدادات الموقع</h2>
+      <p className="text-purple-300/40 text-sm mb-6">هذه الأرقام تظهر في الصفحة الرئيسية في قسم الإحصائيات</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+        <div>
+          <label className="block text-xs text-purple-300/50 mb-1">عدد العقارات</label>
+          <input className={inputClass} type="number" value={form.properties_count} onChange={(e) => setForm({ ...form, properties_count: e.target.value })} />
+        </div>
+        <div>
+          <label className="block text-xs text-purple-300/50 mb-1">عدد الطلاب</label>
+          <input className={inputClass} type="number" value={form.students_count} onChange={(e) => setForm({ ...form, students_count: e.target.value })} />
+        </div>
+        <div>
+          <label className="block text-xs text-purple-300/50 mb-1">عدد المدن</label>
+          <input className={inputClass} type="number" value={form.cities_count} onChange={(e) => setForm({ ...form, cities_count: e.target.value })} />
+        </div>
+        <div>
+          <label className="block text-xs text-purple-300/50 mb-1">متوسط التقييم</label>
+          <input className={inputClass} type="text" value={form.rating} onChange={(e) => setForm({ ...form, rating: e.target.value })} />
+        </div>
+        <div>
+          <label className="block text-xs text-purple-300/50 mb-1">نسبة الرضا (%)</label>
+          <input className={inputClass} type="number" value={form.satisfaction} onChange={(e) => setForm({ ...form, satisfaction: e.target.value })} />
+        </div>
+        <div>
+          <label className="block text-xs text-purple-300/50 mb-1">سرعة الاستجابة (ساعة)</label>
+          <input className={inputClass} type="number" value={form.response_time} onChange={(e) => setForm({ ...form, response_time: e.target.value })} />
+        </div>
+      </div>
+
+      {msg && (
+        <div className={`mt-4 p-3 rounded-xl text-sm ${msg.includes('خطأ') ? 'bg-red-500/10 text-red-300' : 'bg-green-500/10 text-green-300'}`}>
+          {msg}
+        </div>
+      )}
+
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={handleSave}
+        disabled={saving}
+        className="mt-6 px-6 py-2.5 rounded-xl bg-gradient-to-l from-purple-500 to-pink-500 text-white font-bold text-sm disabled:opacity-50"
+      >
+        {saving ? 'جاري الحفظ...' : 'حفظ الإعدادات'}
+      </motion.button>
     </div>
   );
 }

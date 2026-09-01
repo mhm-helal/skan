@@ -1,5 +1,6 @@
 import pyotp
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
@@ -13,6 +14,10 @@ from app.auth import (
 from app.tasks.email import send_welcome_email_sync
 
 router = APIRouter(prefix="/api/auth", tags=["المصادقة"])
+
+
+class GoogleLoginRequest(BaseModel):
+    credential: str
 
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
@@ -38,6 +43,44 @@ def register(data: UserRegister, db: Session = Depends(get_db)):
         pass
 
     return user
+
+
+@router.post("/google", response_model=TokenResponse)
+def google_login(data: GoogleLoginRequest, db: Session = Depends(get_db)):
+    try:
+        from google.oauth2 import id_token
+        from google.auth.transport import requests as google_requests
+
+        idinfo = id_token.verify_oauth2_token(
+            data.credential, google_requests.Request(),
+            "1057671369023-pvkr0kvrf9kqt67s7g5h5pnqb2q2s8s0.apps.googleusercontent.com"
+        )
+        google_id = idinfo["sub"]
+        email = idinfo.get("email", "")
+        name = idinfo.get("name", "")
+        picture = idinfo.get("picture", "")
+    except Exception:
+        raise HTTPException(status_code=400, detail="رمز Google غير صالح")
+
+    user = db.query(User).filter(User.google_id == google_id).first()
+    if not user:
+        user = db.query(User).filter(User.email == email).first()
+        if user:
+            user.google_id = google_id
+            db.commit()
+        else:
+            user = User(
+                name=name,
+                email=email,
+                google_id=google_id,
+                password_hash=None,
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+
+    token = create_access_token(data={"user_id": user.id})
+    return {"access_token": token, "token_type": "bearer"}
 
 
 @router.post("/login", response_model=TokenResponse)

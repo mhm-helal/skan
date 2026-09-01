@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowLeft, Phone } from 'lucide-react';
 import { useAuth } from '../store';
+
+declare global {
+  interface Window {
+    google?: any;
+    googleSignIn?: (response: any) => void;
+  }
+}
 
 export default function LoginPage() {
   const [loginType, setLoginType] = useState<'email' | 'phone'>('email');
@@ -12,8 +19,41 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
+  const googleBtnRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const clientId = '1057671369023-pvkr0kvrf9kqt67s7g5h5pnqb2q2s8s0.apps.googleusercontent.com';
+
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.onload = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleResponse,
+        });
+        window.google.accounts.id.renderButton(
+          googleBtnRef.current,
+          { theme: 'outline', size: 'large', width: '100%', text: 'continue_with', locale: 'ar' }
+        );
+      }
+    };
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
+  }, []);
+
+  const handleGoogleResponse = async (response: any) => {
+    try {
+      setError('');
+      await googleLogin(response.credential);
+      navigate('/');
+    } catch (err: any) {
+      setError(err.response?.data?.detail || 'فشل تسجيل الدخول بـ Google');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,6 +210,24 @@ export default function LoginPage() {
               {loading ? 'جاري الدخول...' : 'تسجيل الدخول'}
             </motion.button>
           </form>
+
+          <div className="mt-6">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-purple-500/10"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-transparent text-purple-300/40">أو</span>
+              </div>
+            </div>
+
+            <div ref={googleBtnRef} className="w-full flex justify-center"></div>
+
+            <p className="text-center text-xs text-purple-300/30 mt-3">
+              بالدخول أنت توافق على{' '}
+              <Link to="/terms" className="text-purple-300/50 hover:text-purple-300">شروط الاستخدام</Link>
+            </p>
+          </div>
 
           <div className="mt-6 text-center">
             <Link to="/register" className="inline-flex items-center gap-2 text-sm text-purple-300/50 hover:text-purple-300 transition-colors">
