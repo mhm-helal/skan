@@ -1,6 +1,8 @@
 import { useState, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './store';
+import { ThemeProvider } from './theme';
+import { I18nProvider } from './i18n';
 import Navbar from './components/Navbar';
 import DockNav from './components/DockNav';
 import Footer from './components/Footer';
@@ -54,8 +56,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ThemeProvider>
+      <I18nProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </I18nProvider>
+    </ThemeProvider>
   );
 }
