@@ -2,12 +2,15 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import HeroSection from '../components/HeroSection';
 import StatsSection from '../components/StatsSection';
 import HowItWorks from '../components/HowItWorks';
+import SearchFilters from '../components/SearchFilters';
+import TestimonialsSection from '../components/TestimonialsSection';
+import FAQSection from '../components/FAQSection';
 import OwnersCTA from '../components/OwnersCTA';
 import api from '../api';
 import type { Property } from '../types';
 
 const PropertyCard = lazy(() => import('../components/PropertyCard'));
-const Scene3D = lazy(() => import('../components/Scene3D'));
+const MapSearch = lazy(() => import('../components/MapSearch'));
 
 const FALLBACK_PROPERTIES: Property[] = [
   {
@@ -32,7 +35,7 @@ const FALLBACK_PROPERTIES: Property[] = [
     description: 'شقة واسعة بشرفة تطل على الحديقة', is_available: true,
   },
   {
-    id: 4, title: 'شقة فاخرة بالكامل', address: 'Compound Fifth Settlement، القاهرة الجديدة', city: 'القاهرة الجديدة',
+    id: 4, title: 'شقة فاخرة بالكامل', address: 'Fifth Settlement، القاهرة الجديدة', city: 'القاهرة الجديدة',
     price: 12000, image_url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
     rooms: 4, bathrooms: 3, area: 200, tags: ['فاخرة', 'جاكوزي', 'حديقة خاصة'],
     owner_name: 'خالد عبدالله', owner_phone: '01288877766',
@@ -68,6 +71,13 @@ export default function HomeContent() {
   return (
     <>
       <HeroSection />
+
+      <section className="py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <SearchFilters />
+        </div>
+      </section>
+
       <StatsSection />
 
       {properties.length > 0 && (
@@ -94,9 +104,15 @@ export default function HomeContent() {
       )}
 
       <Suspense fallback={<div className="py-20 text-center text-purple-300/30">جاري التحميل...</div>}>
-        <Scene3D />
+        <MapSearch />
       </Suspense>
+
       <HowItWorks />
+
+      <TestimonialsSection />
+
+      <FAQSection />
+
       <OwnersCTA />
     </>
   );

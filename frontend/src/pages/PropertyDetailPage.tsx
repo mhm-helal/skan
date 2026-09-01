@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BedDouble, Bath, Maximize, MapPin, ArrowRight, Lock, Images, X, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BedDouble, Bath, Maximize, MapPin, ArrowRight, Lock, Images, X, ChevronRight, ChevronLeft, Share2 } from 'lucide-react';
 import { useAuth } from '../store';
 import api from '../api';
 import type { Property } from '../types';
+import BiddingSystem from '../components/BiddingSystem';
+import ShareWithParent from '../components/ShareWithParent';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -249,6 +251,10 @@ export default function PropertyDetailPage() {
                   </div>
                 )}
               </div>
+
+              <BiddingSystem propertyId={property.id} currentPrice={property.price} onBidSubmitted={() => {}} />
+
+              <ShareWithParent property={property} />
             </div>
           </div>
         </motion.div>
