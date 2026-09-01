@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { BedDouble, Bath, Maximize, MapPin, ArrowRight, Lock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BedDouble, Bath, Maximize, MapPin, ArrowRight, Lock, Images, X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../store';
 import api from '../api';
 import type { Property } from '../types';
 
-type Tab = 'details' | '3d' | 'features';
+type Tab = 'details' | '3d' | 'features' | 'gallery';
 
 export default function PropertyDetailPage() {
   const { id } = useParams();
@@ -17,6 +17,7 @@ export default function PropertyDetailPage() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingId, setBookingId] = useState<number | null>(null);
   const [bookingError, setBookingError] = useState('');
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
     api.get(`/api/properties/${id}`).then((res) => setProperty(res.data)).catch(() => {
@@ -90,7 +91,7 @@ export default function PropertyDetailPage() {
               </div>
 
               <div className="flex gap-2 p-1 rounded-2xl bg-purple-500/5 border border-purple-500/10">
-                {(['details', '3d', 'features'] as Tab[]).map((tab) => (
+                {(['details', 'gallery', '3d', 'features'] as Tab[]).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -100,7 +101,7 @@ export default function PropertyDetailPage() {
                         : 'text-purple-300/40 hover:text-purple-300/60'
                     }`}
                   >
-                    {tab === 'details' ? 'التفاصيل' : tab === '3d' ? 'ثلاثي الأبعاد' : 'المميزات'}
+                    {tab === 'details' ? 'التفاصيل' : tab === 'gallery' ? 'الصور' : tab === '3d' ? 'ثلاثي الأبعاد' : 'المميزات'}
                   </button>
                 ))}
               </div>
@@ -110,6 +111,44 @@ export default function PropertyDetailPage() {
                   <div>
                     <h3 className="text-xl font-bold text-white/90 mb-4">وصف العقار</h3>
                     <p className="text-purple-300/50 leading-relaxed">{property.description || 'لا يوجد وصف متاح لهذا العقار.'}</p>
+                  </div>
+                )}
+                {activeTab === 'gallery' && (
+                  <div>
+                    <h3 className="text-xl font-bold text-white/90 mb-4">صور العقار</h3>
+                    {property.media_urls && property.media_urls.length > 0 ? (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {property.media_urls.map((url, i) => (
+                          <motion.button
+                            key={i}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setLightboxIndex(i)}
+                            className="relative aspect-square rounded-xl overflow-hidden group"
+                          >
+                            <img
+                              src={url.startsWith('/uploads') ? `http://localhost:8000${url}` : url}
+                              alt={`${property.title} - ${i + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                            {url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov') ? (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-full bg-black/50 flex items-center justify-center">
+                                  <div className="w-0 h-0 border-t-8 border-t-transparent border-l-12 border-l-white border-b-8 border-b-transparent ml-1" />
+                                </div>
+                              </div>
+                            ) : null}
+                          </motion.button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-12">
+                        <Images size={48} className="mx-auto mb-4 text-purple-500/20" />
+                        <p className="text-purple-300/50">لا توجد صور إضافية لهذا العقار</p>
+                        <p className="text-purple-300/30 text-sm mt-1">يمكن للمدير إضافة صور من لوحة التحكم</p>
+                      </div>
+                    )}
                   </div>
                 )}
                 {activeTab === '3d' && (
@@ -208,6 +247,78 @@ export default function PropertyDetailPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxIndex !== null && property.media_urls && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center"
+            onClick={() => setLightboxIndex(null)}
+          >
+            <button
+              onClick={() => setLightboxIndex(null)}
+              className="absolute top-6 left-6 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors z-10"
+            >
+              <X size={24} />
+            </button>
+
+            {lightboxIndex > 0 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex(lightboxIndex - 1); }}
+                className="absolute right-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors z-10"
+              >
+                <ChevronRight size={24} />
+              </button>
+            )}
+
+            {lightboxIndex < property.media_urls.length - 1 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex(lightboxIndex + 1); }}
+                className="absolute left-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors z-10"
+              >
+                <ChevronLeft size={24} />
+              </button>
+            )}
+
+            <motion.div
+              key={lightboxIndex}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="max-w-5xl max-h-[85vh] px-16"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {property.media_urls[lightboxIndex].endsWith('.mp4') || property.media_urls[lightboxIndex].endsWith('.webm') || property.media_urls[lightboxIndex].endsWith('.mov') ? (
+                <video
+                  src={property.media_urls[lightboxIndex].startsWith('/uploads') ? `http://localhost:8000${property.media_urls[lightboxIndex]}` : property.media_urls[lightboxIndex]}
+                  controls
+                  autoPlay
+                  className="max-w-full max-h-[80vh] rounded-2xl mx-auto"
+                />
+              ) : (
+                <img
+                  src={property.media_urls[lightboxIndex].startsWith('/uploads') ? `http://localhost:8000${property.media_urls[lightboxIndex]}` : property.media_urls[lightboxIndex]}
+                  alt={`${property.title} - ${lightboxIndex + 1}`}
+                  className="max-w-full max-h-[80vh] object-contain rounded-2xl mx-auto"
+                />
+              )}
+            </motion.div>
+
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+              {property.media_urls.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex(i); }}
+                  className={`w-2.5 h-2.5 rounded-full transition-colors ${i === lightboxIndex ? 'bg-white' : 'bg-white/30 hover:bg-white/50'}`}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
